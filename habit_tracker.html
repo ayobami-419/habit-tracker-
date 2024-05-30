@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .habit {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .habit input {
+            margin-right: 10px;
+        }
+        #pieChart {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: conic-gradient(#4caf50 0% 0%, #ddd 0% 100%);
+        }
+        #container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="habits">
+            <div class="habit">
+                <input type="checkbox" class="habit-checkbox" id="habit1">
+                <label for="habit1">Habit 1</label>
+            </div>
+            <div class="habit">
+                <input type="checkbox" class="habit-checkbox" id="habit2">
+                <label for="habit2">Habit 2</label>
+            </div>
+            <div class="habit">
+                <input type="checkbox" class="habit-checkbox" id="habit3">
+                <label for="habit3">Habit 3</label>
+            </div>
+        </div>
+        <div id="pieChart"></div>
+    </div>
+
+    <script>
+        function updatePieChart() {
+            const checkboxes = document.querySelectorAll('.habit-checkbox');
+            const checkedCount = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
+            const totalCount = checkboxes.length;
+            const percentage = (checkedCount / totalCount) * 100;
+            document.getElementById('pieChart').style.background = `conic-gradient(#4caf50 0% ${percentage}%, #ddd ${percentage}% 100%)`;
+        }
+
+        function resetHabits() {
+            const checkboxes = document.querySelectorAll('.habit-checkbox');
+            checkboxes.forEach(checkbox => checkbox.checked = false);
+            updatePieChart();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkboxes = document.querySelectorAll('.habit-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updatePieChart);
+            });
+            updatePieChart();
+
+            const now = new Date();
+            const millisTillMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0) - now;
+            setTimeout(() => {
+                resetHabits();
+                setInterval(resetHabits, 24 * 60 * 60 * 1000);
+            }, millisTillMidnight);
+        });
+    </script>
+</body>
+</html>
